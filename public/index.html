@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Revalia' rel='stylesheet'>    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Data Grand-Est</title>
+</head>
+<body>
+    <div class="menu_gauche">
+        <div class="menu">
+            <a href="#"><h1 class="titre">Data Grand-Est</h1></a>
+            <ul>
+                <li><a href="#"><button class="current">Grand-Est</button></a></li>
+                <li><a href="#"><button>Communes</button></a></li>
+                <li><a href="#"><button>Titre 3</button></a></li>
+            </ul>
+        </div>
+        <div class="filtres">
+            <h3>Filtres : </h3>
+            <form action="myForm">
+                <label for="category">Sélectionnez la ... : </label>
+                    <select name="category" id="category">
+                        
+                    </select>
+                <label for="annee">Sélectionnez l'...:</label>
+                    <select id="annee">
+                        
+                    </select>
+                <button type="button" onclick="submitForm()">Valider</button>
+            </form>  
+        </div>
+    </div>
+    <div class="contenu">
+        <div class="un loader">
+            <img src="/img/loader.gif" id="loading" alt="Chargement en cours..." style="display: none;">
+            <div id="leafletMap" class="leafletMap"></div>
+        </div>
+        <div class="deux loader">
+            <img src="/img/loader.gif" id="loading2" alt="Chargement en cours..." style="display: none;">
+            <div id="heatMap" class="heatMap"></div>
+        </div>
+        <div class="trois loader graphique">
+            <h6 id="monTitre">Répartition des .. par ...</h6>
+            <div class="canvas">
+                <canvas id="donutChart"></canvas>
+            </div>
+        </div>
+        <div class="quatre loader graphique">
+            <h6>Répartition du nombre de ...</h6>
+            <div class="canvas">
+                <canvas id="myChart" class="my_chart"></canvas>
+            </div>
+        </div>
+        <div id="cinq" class="cinq loader">
+            <div class="graphique">
+                <h6>nb</h6>
+                <h5 id="resultatRequete">0.00</h5>
+            </div>
+            <div class="graphique">
+                <h6>nb</h6>
+                <h5 id="nombres2">0</h5>
+            </div>
+            <div class="graphique">
+                <h6>nb</h6>
+                <h5 id="nombres3">0</h5>
+            </div>
+        </div>
+    </div>
+    <script src="./js/script.js"></script>
+</body>
+</html>
