@@ -52,7 +52,7 @@ setInterval(() => {
             // Envoyer un événement SSE aux clients connectés pour indiquer une erreur de connexion
             app.emit('databaseStatus', 'disconnected');
         });
-}, 5000);
+}, 1000);
 
 // Endpoint SSE pour obtenir l'état de la connexion en temps réel
 app.get('/database-status', (req, res) => {
