@@ -34,9 +34,9 @@ async function executeQuery(sql) {
 }
 
 // Exécutez vos requêtes SQL et stockez les résultats
-const query1 = 'SELECT * FROM Nuitees';
-const query2 = 'SELECT * FROM POIs';
-const query3 = 'SELECT * FROM POIs';
+const query1 = 'SELECT * FROM Nuitees LIMIT 100';
+const query2 = 'SELECT * FROM POIs LIMIT 100';
+const query3 = 'SELECT * FROM POIs LIMIT 100';
 
 const queryResults = {
     result1: executeQuery(query1),
