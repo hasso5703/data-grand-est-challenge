@@ -5,6 +5,10 @@ const dotenv = require('dotenv');
 dotenv.config();
 app.use(express.static(__dirname + '/public'));
 
+app.get('/', function(req, res){
+    res.render('index.js');
+});
+
 const host = process.env.DB_HOST;
 const user = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
