@@ -1,31 +1,21 @@
 const express = require('express');
-const http = require('http');
-const WebSocket = require('ws');
 const app = express();
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 dotenv.config();
 app.use(express.static(__dirname + '/public'));
 
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
 const host = process.env.DB_HOST;
 const user = process.env.DB_USER;
 const password = process.env.DB_PASSWORD;
 const database = process.env.DB_DATABASE;
 
-// Fonction pour créer un pool de connexions MySQL
-const createPool = () => {
-    return mysql.createPool({
-        host: host,
-        user: user,
-        password: password,
-        database: database
-    });
-};
-
-let db = createPool();
+const db = mysql.createPool({
+    host: host,
+    user: user,
+    password: password,
+    database: database
+});
 
 // Fonction pour exécuter une requête SQL
 async function executeQuery(sql) {
@@ -38,51 +28,59 @@ async function executeQuery(sql) {
     }
 }
 
-// Ping de la base de données pour vérifier la connexion
-const pingDatabase = async () => {
-    try {
-        const connection = await db.getConnection();
-        await connection.ping();
-        connection.release();
-        return true;
-    } catch (error) {
-        console.error('Erreur de ping de la base de données:', error.message);
-        return false;
-    }
-};
-
 // Exécutez vos requêtes SQL et stockez les résultats
 const query1 = 'SELECT * FROM Nuitees';
 const query2 = 'SELECT * FROM POIs';
 const query3 = 'SELECT * FROM POIs';
 
-// Exemple de résultats des requêtes
 const queryResults = {
     result1: executeQuery(query1),
     result2: executeQuery(query2),
     result3: executeQuery(query3),
 };
 
-// WebSocket server logic
-wss.on('connection', (ws) => {
-    // Envoyer des mises à jour à chaque connexion
-    Object.keys(queryResults).forEach(async (queryName) => {
-        try {
-            const result = await queryResults[queryName];
-            ws.send(JSON.stringify({ queryName, result, databaseStatus: 'Connecté' }));
-        } catch (error) {
-            ws.send(JSON.stringify({ queryName, error: 'Erreur lors de l\'exécution de la requête', databaseStatus: 'Connecté' }));
-        }
-    });
+// Envoyer l'état de la connexion toutes les 5 secondes
+setInterval(() => {
+    db.query('SELECT 1')
+        .then(() => {
+            console.log('Connexion à la base de données établie');
+            // Envoyer un événement SSE aux clients connectés pour indiquer une connexion réussie
+            app.emit('databaseStatus', 'connected');
+        })
+        .catch((err) => {
+            console.error('Erreur de connexion à la base de données', err);
+            // Envoyer un événement SSE aux clients connectés pour indiquer une erreur de connexion
+            app.emit('databaseStatus', 'disconnected');
+        });
+}, 1000);
 
-    // Vérifier la connexion à la base de données à intervalles réguliers
-    const pingInterval = setInterval(async () => {
-        const isConnected = await pingDatabase();
-        ws.send(JSON.stringify({ databaseStatus: isConnected ? 'Connecté' : 'Déconnecté' }));
-    }, 5000); // Vérifie toutes les 5 secondes
+// Endpoint SSE pour obtenir l'état de la connexion en temps réel
+app.get('/database-status', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    // Envoyer l'état actuel de la connexion immédiatement lorsqu'un client se connecte
+    if (db.isInitialized) {
+        res.write(`data: ${db.isDisconnected ? 'disconnected' : 'connected'}\n\n`);
+    }
+
+    // Écouter les événements SSE émis par l'application
+    const listener = (status) => {
+        res.write(`data: ${status}\n\n`);
+    };
+    app.on('databaseStatus', listener);
+
+    // Gérer la déconnexion du client
+    req.on('close', () => {
+        app.removeListener('databaseStatus', listener);
+    });
 });
 
-// Route pour récupérer les résultats des requêtes
+app.listen(3000, () => {
+    console.log('Serveur en cours d\'exécution sur le port 3000');
+});
+
 app.get('/recuperer-resultat', (req, res) => {
     const queryName = req.query.queryName;
     if (queryResults.hasOwnProperty(queryName)) {
@@ -96,6 +94,3 @@ app.get('/recuperer-resultat', (req, res) => {
     }
 });
 
-server.listen(3000, () => {
-    console.log('Serveur en cours d\'exécution sur le port 3000');
-});

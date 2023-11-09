@@ -34,62 +34,25 @@ fetch('/recuperer-resultat?queryName=result1', {
         console.error('Erreur : ' + error);
     });
 
-
-
-
-
-// Appel de la deuxième requête
-fetch('/recuperer-resultat?queryName=result2', {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-},
-})
-.then(response => {
-    if (!response.ok) {
-    throw new Error('Réponse réseau incorrecte');
-    }
-    return response.json();
-})
-.then(data => {
-    // Utilisez les données récupérées depuis result2
-})
-.catch(error => {
-    console.error('Erreur : ' + error);
-});
-
-// Appel de la troisième requête
-fetch('/recuperer-resultat?queryName=result3', {
-method: 'GET',
-headers: {
-    'Content-Type': 'application/json',
-},
-})
-.then(response => {
-    if (!response.ok) {
-    throw new Error('Réponse réseau incorrecte');
-    }
-    return response.json();
-})
-.then(data => {
-    // Utilisez les données récupérées depuis result3
-})
-.catch(error => {
-    console.error('Erreur : ' + error);
-});
-
-const ws = new WebSocket('ws://localhost:3000');
-
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
     const statusElement = document.getElementById('status');
+    const eventSource = new EventSource('/database-status');
 
-    if (data.databaseStatus) {
-        statusElement.innerHTML = `<p>État de la base de données : ${data.databaseStatus}</p>`;
-    } else if (data.error) {
-        statusElement.innerHTML = `<p>Error for query ${data.queryName}: ${data.error}</p>`;
-    } else {
-        statusElement.innerHTML = `<p>Query ${data.queryName} executed successfully</p>`;
-        // Vous pouvez également afficher le résultat de la requête ici si nécessaire
-    }
-};
+    eventSource.onmessage = (event) => {
+        const status = event.data;
+        statusElement.textContent = `Database Status: ${status}`;
+        if (status === 'disconnected') {
+            statusElement.style.color = 'red';
+        } else {
+            statusElement.style.color = 'green';
+        }
+    };
+
+    eventSource.onerror = (error) => {
+        console.error('Error with SSE:', error);
+        eventSource.close();
+    };
+
+    // Fermer la connexion SSE lorsque la page est fermée ou quittée
+    window.addEventListener('beforeunload', () => {
+        eventSource.close();
+    });
