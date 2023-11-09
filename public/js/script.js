@@ -77,3 +77,16 @@ headers: {
 .catch(error => {
     console.error('Erreur : ' + error);
 });
+
+const ws = new WebSocket('ws://localhost:3000');
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    const statusElement = document.getElementById('status');
+
+    if (data.error) {
+        statusElement.innerHTML = `<p>Error for query ${data.queryName}: ${data.error}</p>`;
+    } else {
+        statusElement.innerHTML = `<p>Query ${data.queryName} executed successfully</p>`;
+    }
+};
