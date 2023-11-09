@@ -84,9 +84,12 @@ ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
     const statusElement = document.getElementById('status');
 
-    if (data.error) {
+    if (data.databaseStatus) {
+        statusElement.innerHTML = `<p>État de la base de données : ${data.databaseStatus}</p>`;
+    } else if (data.error) {
         statusElement.innerHTML = `<p>Error for query ${data.queryName}: ${data.error}</p>`;
     } else {
         statusElement.innerHTML = `<p>Query ${data.queryName} executed successfully</p>`;
+        // Vous pouvez également afficher le résultat de la requête ici si nécessaire
     }
 };
