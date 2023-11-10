@@ -10,7 +10,7 @@ body{
     max-height: 100vh;
     width: 100vw;
     max-width: 100vw;
-    background-image: url("img/denver.jpg");
+    background-image: url("../img/metz.jpg");
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     display: flex;
@@ -69,8 +69,8 @@ button:hover {
     padding: 7px 15px;
     border-radius: 20px;
     border: none;
-    background-color: rgb(139, 255, 110);
-    color: rgb(74, 74, 74);
+    background-color: rgb(72, 157, 255);
+    color: rgb(255, 255, 255);
     width: 100px;
 }
 

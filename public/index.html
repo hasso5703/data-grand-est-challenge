@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chroma-js@2.1.0"></script>
     <link href='https://fonts.googleapis.com/css?family=Revalia' rel='stylesheet'>    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <link rel="stylesheet" href="./css/style.css">
     <title>Data Grand-Est</title>
 </head>
@@ -42,11 +39,11 @@
     </div>
     <div class="contenu">
         <div class="un loader">
-            <img src="/img/loader.gif" id="loading" alt="Chargement en cours..." style="display: none;">
+            <img src="./img/loader.gif" id="loading" alt="Chargement en cours..." style="display: none;">
             <div id="leafletMap" class="leafletMap"></div>
         </div>
         <div class="deux loader">
-            <img src="/img/loader.gif" id="loading2" alt="Chargement en cours..." style="display: none;">
+            <img src="./img/loader.gif" id="loading2" alt="Chargement en cours..." style="display: none;">
             <div id="heatMap" class="heatMap"></div>
         </div>
         <div class="trois loader graphique">
@@ -76,6 +73,10 @@
             </div>
         </div>
     </div>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <script src="./js/script.js"></script>
 </body>
 </html>

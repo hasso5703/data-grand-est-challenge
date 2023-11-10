@@ -29,9 +29,9 @@ async function executeQuery(sql) {
 }
 
 // Exécutez vos requêtes SQL et stockez les résultats
-const query1 = 'SELECT * FROM Nuitees LIMIT 1000';
-const query2 = 'SELECT * FROM POIs LIMIT 1000';
-const query3 = 'SELECT * FROM POIs LIMIT 1000';
+const query1 = 'SELECT * FROM Nuitees LIMIT 3000';
+const query2 = 'SELECT * FROM POIs LIMIT 3000';
+const query3 = 'SELECT * FROM POIs LIMIT 3000';
 
 const queryResults = {
     result1: executeQuery(query1),
@@ -39,11 +39,15 @@ const queryResults = {
     result3: executeQuery(query3),
 };
 
+let i = 0;
 // Envoyer l'état de la connexion toutes les 5 secondes
 setInterval(() => {
     db.query('SELECT 1')
         .then(() => {
-            console.log('Connexion à la base de données établie');
+            if (i<1){
+                console.log('Connexion à la base de données établie');
+                i+=1;
+            }
             // Envoyer un événement SSE aux clients connectés pour indiquer une connexion réussie
             app.emit('databaseStatus', 'connected');
         })
@@ -52,7 +56,7 @@ setInterval(() => {
             // Envoyer un événement SSE aux clients connectés pour indiquer une erreur de connexion
             app.emit('databaseStatus', 'disconnected');
         });
-}, 1000);
+}, 3000);
 
 // Endpoint SSE pour obtenir l'état de la connexion en temps réel
 app.get('/database-status', (req, res) => {
