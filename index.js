@@ -29,14 +29,16 @@ async function executeQuery(sql) {
 }
 
 // Exécutez vos requêtes SQL et stockez les résultats
-const query1 = 'SELECT * FROM Nuitees LIMIT 3000';
-const query2 = 'SELECT * FROM POIs LIMIT 3000';
-const query3 = 'SELECT * FROM POIs LIMIT 3000';
+const query1 = 'SELECT * FROM Nuitees limit 3000';
+const query2 = 'SELECT * FROM POIs limit 3000';
+const query3 = 'SELECT type, count(*) as nombre FROM Nuitees group by type limit 3000;';
+const query4 = 'SELECT sstype, count(*) as nombre FROM POIs group by sstype limit 3000;';
 
 const queryResults = {
     result1: executeQuery(query1),
     result2: executeQuery(query2),
     result3: executeQuery(query3),
+    result4: executeQuery(query4),
 };
 
 let i = 0;
